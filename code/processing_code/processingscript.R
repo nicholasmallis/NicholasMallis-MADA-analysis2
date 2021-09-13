@@ -78,7 +78,8 @@ us_covid$medicaid[us_covid$`State/Territory`== 'Wisconsin'] <- "States that did 
 
 
 
-#Now I create 2 new variables. 
+#Now I create 4 new variables that are all numeric versions of total cases, total deaths
+#total cases in last 7 days and total deaths in last 7 days. These will be used to make comparisons
 
 #This is a numeric version of total cases
 us_covid$cases <- as.numeric(us_covid$`Total Cases`)
@@ -97,19 +98,11 @@ processeddata <- us_covid
 # location to save file
 save_data_location <- here::here("data","processed_data","processeddata.rds")
 
-saveRDS(processeddata, file = save_data_location)
-
-
 # save data as RDS
-# I suggest you save your processed and cleaned data as RDS or RDA/Rdata files. 
-# This preserves coding like factors, characters, numeric, etc. 
-# If you save as CSV, that information would get lost.
-# See here for some suggestions on how to store your processed data:
-# http://www.sthda.com/english/wiki/saving-data-into-r-data-format-rds-and-rdata
-
-# location to save file
-save_data_location <- here::here("data","processed_data","processeddata.rds")
-
 saveRDS(processeddata, file = save_data_location)
+
+
+
+
 
 

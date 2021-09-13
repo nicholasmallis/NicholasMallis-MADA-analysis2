@@ -73,6 +73,9 @@ ggplot(data=table2, aes(x=medicaid,y=rate)) + geom_bar(stat='identity') + xlab("
   ylab("COVID-19 Mortality Rate over Seven days (%)") + labs(title ="COVID-19 Seven Day Mortality Rate by Medicaid Expansion Status")
 
 
+
+
+#############################where my stuff ends#####
 #do the same, but with a bit of trickery to get things into the 
 #shape of a data frame (for easier saving/showing in manuscript)
 summary_df = data.frame(do.call(cbind, lapply(mydata, summary)))
