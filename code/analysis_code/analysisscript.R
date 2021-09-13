@@ -45,7 +45,7 @@ table$rate <- table$deaths_name/table$cases_name * 100
 as.data.frame(table)
 
 #Here we plot the results in a bar chart by medicaid expansion status
-ggplot(data=table, aes(x=medicaid,y=rate)) + geom_bar(stat='identity') + xlab("States Grouped by Medicaid Expansion Status") +
+plot1 <- ggplot(data=table, aes(x=medicaid,y=rate)) + geom_bar(stat='identity') + xlab("States Grouped by Medicaid Expansion Status") +
   ylab("COVID-19 Mortality Rate (%)") + labs(title ="COVID-19 Mortality Rate by Medicaid Expansion Status")
 
 
@@ -69,7 +69,7 @@ table2$rate <- table2$deaths_7_days_name/table2$cases_7_days_name * 100
 as.data.frame(table2)
 
 #Here we plot the results in a bar chart by medicaid expansion status
-ggplot(data=table2, aes(x=medicaid,y=rate)) + geom_bar(stat='identity') + xlab("States Grouped by Medicaid Expansion Status") +
+plot2 <- ggplot(data=table2, aes(x=medicaid,y=rate)) + geom_bar(stat='identity') + xlab("States Grouped by Medicaid Expansion Status") +
   ylab("COVID-19 Mortality Rate over Seven days (%)") + labs(title ="COVID-19 Seven Day Mortality Rate by Medicaid Expansion Status")
 
 
