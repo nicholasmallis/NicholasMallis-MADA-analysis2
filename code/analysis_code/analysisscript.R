@@ -29,6 +29,50 @@ mysummary = summary(mydata)
 #look at summary
 print(mysummary)
 
+
+#Now I add total cases and total deaths by medicaid expansion status
+#and save the results in a table
+table <- mydata %>%              
+  group_by(medicaid) %>%                        
+  summarise_at(vars(cases,deaths),
+               list(name = sum))
+
+#using our sums of deaths and cases, we can calculate a death rate for each group
+table$rate <- table$deaths_name/table$cases_name * 100
+
+
+#Now we convert these to a table  
+as.data.frame(table)
+
+#Here we plot the results in a bar chart by medicaid expansion status
+ggplot(data=table, aes(x=medicaid,y=rate)) + geom_bar(stat='identity') + xlab("States Grouped by Medicaid Expansion Status") +
+  ylab("COVID-19 Mortality Rate (%)") + labs(title ="COVID-19 Mortality Rate by Medicaid Expansion Status")
+
+
+
+
+#Since cases have been so high the last week, I thought it would be interesting to look
+#at this comparison over the last 7 days 
+
+#First we add total cases in the last 7 days by medicaid expansion status
+#and save the results in a table
+table2 <- mydata %>%              
+  group_by(medicaid) %>%                        
+  summarise_at(vars(cases_7_days, deaths_7_days),
+               list(name = sum))
+
+#using our sums of deaths and cases, we can calculate a 7 day death rate for each group
+table2$rate <- table2$deaths_7_days_name/table2$cases_7_days_name * 100
+
+
+#Now we convert these to a table  
+as.data.frame(table2)
+
+#Here we plot the results in a bar chart by medicaid expansion status
+ggplot(data=table2, aes(x=medicaid,y=rate)) + geom_bar(stat='identity') + xlab("States Grouped by Medicaid Expansion Status") +
+  ylab("COVID-19 Mortality Rate over Seven days (%)") + labs(title ="COVID-19 Seven Day Mortality Rate by Medicaid Expansion Status")
+
+
 #do the same, but with a bit of trickery to get things into the 
 #shape of a data frame (for easier saving/showing in manuscript)
 summary_df = data.frame(do.call(cbind, lapply(mydata, summary)))

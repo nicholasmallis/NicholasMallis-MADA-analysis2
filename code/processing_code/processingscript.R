@@ -11,45 +11,94 @@ library(here) #to set paths
 
 #path to data
 #note the use of the here() package and not absolute paths
-data_location <- here::here("data","raw_data","exampledata.xlsx")
+data_location <- here::here("data","raw_data","united_states_covid19_cases_deaths_and_testing_by_state.csv")
 
-#load data. 
-#note that for functions that come from specific packages (instead of base R)
-# I often specify both package and function like so
-#package::function() that's not required one could just call the function
-#specifying the package makes it clearer where the function "lives",
-#but it adds typing. You can do it either way.
-rawdata <- readxl::read_excel(data_location)
+
+#My question was pretty specific.
+#I'm interested in comparing COVID death rates between states who expanded medicaid 
+#and those who did not. I'm thinking there might be a higher death rate in states
+#that did not expand medicaid.
+
+#First I load in COVID-19 data from the CDC by state
+library(readr)
+us_covid <- read_csv(data_location)
 
 #take a look at the data
-dplyr::glimpse(rawdata)
+dplyr::glimpse(us_covid)
 
-#dataset is so small, we can print it to the screen.
-#that is often not possible.
-print(rawdata)
+us_covid
 
-# looks like we have measurements for height (in centimeters) and weight (in kilogram)
+#Now I table the State variable. Looks like we're going to need to do some data managment.
+#We don't need all these US territories because they do not apply to our question
+table(us_covid$`State/Territory`)
 
-# there are some problems with the data: 
-# There is an entry which says "sixty" instead of a number. 
-# Does that mean it should be a numeric 60? It somehow doesn't make
-# sense since the weight is 60kg, which can't happen for a 60cm person (a baby)
-# Since we don't know how to fix this, we need to remove the person.
-# This "sixty" entry also turned all Height entries into characters instead of numeric.
-# We need to fix that too.
-# Then there is one person with a height of 6. 
-# that could be a typo, or someone mistakenly entered their height in feet.
-# Since we unfortunately don't know, we'll have to remove this person.
-# similarly, there is a person with weight of 7000, which is impossible,
-# and one person with missing weight.
-# to be able to analyze the data, we'll remove those 5 individuals
+#here I subset the data to exclude all non-states
+us_covid <- us_covid[which(us_covid$`State/Territory` != 'American Samoa'
+                             &
+                            us_covid$`State/Territory` != 'Federated States of Micronesia'
+                             &
+                            us_covid$`State/Territory` != 'Guam'
+                             &
+                            us_covid$`State/Territory` != 'Northern Mariana Islands'
+                             &
+                            us_covid$`State/Territory` != 'Palau'
+                             &
+                            us_covid$`State/Territory` != 'Puerto Rico'
+                             &
+                            us_covid$`State/Territory` != 'Republic of Marshall Islands'
+                             &
+                            us_covid$`State/Territory` != 'United States of America'
+                             &
+                            us_covid$`State/Territory` != 'Virgin Islands'
+                            &
+                             us_covid$`State/Territory` != "New York (Level of Community Transmission)*"
+                           &
+                             us_covid$`State/Territory` != "New York City"
+                           ), ]
+                             
 
-# this is one way of doing it. Note that if the data gets updated, 
-# we need to decide if the thresholds are ok (newborns could be <50)
+                    
+#Now we need another variable that tells us which states expanded medicaid. I found an article here that
+#provides a map/list. Below, I create a new variable called 'medicaid' that tells us if the state expanded or did not
+#https://www.kff.org/medicaid/issue-brief/status-of-state-medicaid-expansion-decisions-interactive-map/
 
-processeddata <- rawdata %>% dplyr::filter( Height != "sixty" ) %>% 
-                             dplyr::mutate(Height = as.numeric(Height)) %>% 
-                             dplyr::filter(Height > 50 & Weight < 1000)
+us_covid$medicaid <- "States that Expanded Medicaid"
+us_covid$medicaid[us_covid$`State/Territory`== 'Georgia'] <- "States that did not Expand Medicaid"
+us_covid$medicaid[us_covid$`State/Territory`== 'Tennessee'] <- "States that did not Expand Medicaid"
+us_covid$medicaid[us_covid$`State/Territory`== 'Florida'] <- "States that did not Expand Medicaid"
+us_covid$medicaid[us_covid$`State/Territory`== 'North Carolina'] <- "States that did not Expand Medicaid"
+us_covid$medicaid[us_covid$`State/Territory`== 'South Carolina'] <- "States that did not Expand Medicaid"
+us_covid$medicaid[us_covid$`State/Territory`== 'Alabama'] <- "States that did not Expand Medicaid"
+us_covid$medicaid[us_covid$`State/Territory`== 'Mississipp'] <- "States that did not Expand Medicaid"
+us_covid$medicaid[us_covid$`State/Territory`== 'Texas'] <- "States that did not Expand Medicaid"
+us_covid$medicaid[us_covid$`State/Territory`== 'Kansas'] <- "States that did not Expand Medicaid"
+us_covid$medicaid[us_covid$`State/Territory`== 'South Dakota'] <- "States that did not Expand Medicaid"
+us_covid$medicaid[us_covid$`State/Territory`== 'Wyoming'] <- "States that did not Expand Medicaid"
+us_covid$medicaid[us_covid$`State/Territory`== 'Wisconsin'] <- "States that did not Expand Medicaid"
+
+
+
+#Now I create 2 new variables. 
+
+#This is a numeric version of total cases
+us_covid$cases <- as.numeric(us_covid$`Total Cases`)
+
+#This is a numeric version of total deaths
+us_covid$deaths <- as.numeric(us_covid$`Total Deaths`)
+
+#This is a numeric version of cases in the last 7 days
+us_covid$cases_7_days <- as.numeric(us_covid$`Cases in Last 7 Days`)
+
+#This is a numeric version of deaths in the last 7 days
+us_covid$deaths_7_days <- as.numeric(us_covid$`Deaths in Last 7 Days`)
+
+processeddata <- us_covid
+
+# location to save file
+save_data_location <- here::here("data","processed_data","processeddata.rds")
+
+saveRDS(processeddata, file = save_data_location)
+
 
 # save data as RDS
 # I suggest you save your processed and cleaned data as RDS or RDA/Rdata files. 
