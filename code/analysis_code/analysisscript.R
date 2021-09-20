@@ -48,8 +48,9 @@ as.data.frame(table)
 plot1 <- ggplot(data=table, aes(x=medicaid,y=rate)) + geom_bar(stat='identity') + xlab("States Grouped by Medicaid Expansion Status") +
   ylab("COVID-19 Mortality Rate (%)") + labs(title ="COVID-19 Mortality Rate by Medicaid Expansion Status")
 
-
-
+#Zhihan's edit: save plot1
+figure_file = here("results","resultfigure1.png")
+ggsave(filename = figure_file, plot=plot1)
 
 #Since cases have been so high the last week, I thought it would be interesting to look
 #at this comparison over the last 7 days 
@@ -72,8 +73,18 @@ as.data.frame(table2)
 plot2 <- ggplot(data=table2, aes(x=medicaid,y=rate)) + geom_bar(stat='identity') + xlab("States Grouped by Medicaid Expansion Status") +
   ylab("COVID-19 Mortality Rate over Seven days (%)") + labs(title ="COVID-19 Seven Day Mortality Rate by Medicaid Expansion Status")
 
+#Zhihan's edit: save plot2
+figure_file = here("results","resultfigure2.png")
+ggsave(filename = figure_file, plot=plot2)
 
+#Zhihan's edit
+plot3 <- ggplot(mydata, aes(`cases`,`deaths`)) + geom_point() + geom_smooth(method='lm') + labs(title ="Test & Death Correlation")
+figure_file = here("results","resultfigure3.png")
+ggsave(filename = figure_file, plot=plot3)
 
+plot4 <- ggplot(mydata, aes(`cases_7_days`,`deaths_7_days`)) + geom_point() + geom_smooth(method='lm') + labs(title ="Test & Death Correlation for 7 days")
+figure_file = here("results","resultfigure4.png")
+ggsave(filename = figure_file, plot=plot4)
 
 #############################where my stuff ends#####
 #do the same, but with a bit of trickery to get things into the 

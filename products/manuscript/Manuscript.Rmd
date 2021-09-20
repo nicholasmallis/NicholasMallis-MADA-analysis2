@@ -39,7 +39,14 @@ Figure \@ref(fig:resultfigure2) shows a bar chart figure produced by one of the 
 ```{r resultfigure2,  fig.cap='Analysis figure.', echo=FALSE}
 knitr::include_graphics("../../results/resultfigure2.png")
 ```
-
+Figure \@ref(fig:resultfigure3) shows a scatterplot figure produced by one of the R scripts.
+```{r resultfigure3,  fig.cap='Analysis figure.', echo=FALSE}
+knitr::include_graphics("../../results/resultfigure3.png")
+```
+Figure \@ref(fig:resultfigure4) shows a scatterplot figure produced by one of the R scripts.
+```{r resultfigure4,  fig.cap='Analysis figure.', echo=FALSE}
+knitr::include_graphics("../../results/resultfigure4.png")
+```
 
 
 
